@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="static/style/style.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="static/scripts/script.js"></script>
 </head>
 <body>
@@ -21,10 +22,31 @@
   </header>
 
   <main class="dashboard">
+
     <div class="card">
-      <h2>Daily Trades</h2>
-      <p id="daily-trades">Loading...</p>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="daily-trades-data">Data Table</button>
+        <button class="tab-button" data-tab="daily-trades-chart">Chart</button>
+      </div>
+      <div id="daily-trades-data" class="tab-content active">
+        <h2>Daily Trades</h2>
+        <table id="daily-trades-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Trades</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </table>
+      </div>
+      <div id="daily-trades-chart" class="tab-content">
+        <canvas id="daily-trades-chart-data" width="400" height="200"></canvas>
+      </div>
     </div>
+
     <div class="card">
       <h2>Active Users</h2>
       <p id="active-users">Loading...</p>
@@ -38,5 +60,3 @@
   <footer>
     <p>&copy; 2024 KA Dashboard</p>
   </footer>
-</body>
-</html>
