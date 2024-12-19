@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/style/style.css">
+  <link rel="stylesheet" href="../static/style/style.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="static/scripts/script.js"></script>
+  <script src="../static/scripts/script.js"></script>
 </head>
 <body>
   <header>
     <h1>Hypurr Dashboard</h1>
     <nav>
-      <a href="#">Home</a>
+      <a href="#">TWAPs</a>
       <a href="#">Stats</a>
       <a href="#">Network</a>
       <a href="#">Settings</a>
@@ -25,16 +25,19 @@
 
     <div class="card">
       <div class="tabs">
-        <button class="tab-button active" data-tab="daily-trades-data">Data Table</button>
-        <button class="tab-button" data-tab="daily-trades-chart">Chart</button>
+        <button class="tab-button active" data-tab="TWAPs-data">Data Table</button>
+        <button class="tab-button" data-tab="TWAPs-chart">Chart</button>
       </div>
-      <div id="daily-trades-data" class="tab-content active">
+      <div id="TWAPs-data" class="tab-content active">
         <h2>Daily Trades</h2>
-        <table id="daily-trades-table">
+        <table id="TWAPs-table">
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Trades</th>
+              <th>Rank</th>
+              <th>Address</th>
+              <th>Amount</th>
+              <th>Value</th>
+              <th>Suplay</th>
             </tr>
           </thead>
           <tbody>
@@ -42,19 +45,19 @@
           </tbody>
         </table>
       </div>
-      <div id="daily-trades-chart" class="tab-content">
-        <canvas id="daily-trades-chart-data" width="400" height="200"></canvas>
+      <div id="TWAPs-chart" class="tab-content">
+        <canvas id="TWAPs-chart-data" width="400" height="200"></canvas>
       </div>
     </div>
 
-    <div class="card">
+    <!-- <div class="card">
       <h2>Active Users</h2>
       <p id="active-users">Loading...</p>
     </div>
     <div class="card">
       <h2>Network Health</h2>
       <p id="network-health">Loading...</p>
-    </div>
+    </div> -->
   </main>
 
   <footer>
