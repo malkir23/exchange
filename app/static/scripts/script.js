@@ -84,9 +84,8 @@ async function fetchTwaps() {
             <td>${item.action.twap.s || 'N/A'}</td>
           </tr>`;
           if (item.error === null) {
-            row += `<td>${item.error}</td>`;
+            twapsTable.append(row);
           }
-          twapsTable.append(row);
         });
         dataExchange[TWAPsChartKey] = data;
       } else {
