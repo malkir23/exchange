@@ -67,7 +67,7 @@ async function buildChart(keyData) {
 
 async function fetchTwaps() {
   $.ajax({
-    url: 'http://localhost:8000/twaps/get_twap_data',
+    url: 'http://84.247.191.198:8000/twaps/get_twap_data',
     method: 'GET',
     success: function (data) {
       let twapsTable = $('#TWAPs-table tbody');
