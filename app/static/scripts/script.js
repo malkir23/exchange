@@ -11,7 +11,7 @@ async function buildChart(keyData) {
   );
   console.log(dataExchange);
 
-  const dataPoints = TWAPsData.map((item) => item.action.twap.m);
+  const dataPoints = TWAPsData.map((item) => item.action.twap.s);
 
   const ctx = document.getElementById(`${keyData}-data`).getContext('2d');
 
@@ -77,10 +77,10 @@ async function fetchTwaps() {
       if (data && Array.isArray(data)) {
         data.forEach(item => {
           const row = `<tr>
-            <td>${item.action.twap.m || 'N/A'}</td>
+            <td>${item.action.twap.b ? 'BUY' : 'SELL' || 'N/A'}</td>
+            <td>${item.action.twap.s || 'N/A'}</td>
+            <td>${item.action.twap.v || 'N/A'}</td>
             <td>${item.user || 'N/A'}</td>
-            <td>${item.action.twap.a || 'N/A'}</td>
-            <td>${item.action.twap.b || 'N/A'}</td>
             <td>${item.action.twap.s || 'N/A'}</td>
           </tr>`;
           if (item.error === null) {
