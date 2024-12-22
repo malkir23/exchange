@@ -9,10 +9,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     volumes:
-      - .:/app  # Монтуємо локальні файли для автоперезавантаження
-      - /app/__pycache__  # Ігноруємо кешування
+      - .:/project_exchange  # Монтуємо локальні файли для автоперезавантаження
+      # - /app/__pycache__  # Ігноруємо кешування
     command: >
-      uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     networks:
       - app-network
 

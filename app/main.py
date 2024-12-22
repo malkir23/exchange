@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from endpoints import site, twaps
+from app.endpoints import site, twaps
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -11,6 +12,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Додаємо маршрути для статичних файлів, якщо вони є
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(site.route, prefix="/site", tags=["Site"])
 app.include_router(twaps.route, prefix="/twaps", tags=["TWAPS"])
