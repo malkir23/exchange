@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.endpoints import site, twaps
+from endpoints import site, twaps
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()

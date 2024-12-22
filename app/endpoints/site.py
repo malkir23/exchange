@@ -6,10 +6,10 @@ from fastapi.staticfiles import StaticFiles
 route = APIRouter()
 
 # Додаємо маршрути для статичних файлів, якщо вони є
-route.mount("/static", StaticFiles(directory="app/static"), name="static")
+route.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Налаштування шаблонів
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="templates")
 
 
 @route.get("/", response_class=HTMLResponse)
