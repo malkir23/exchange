@@ -77,12 +77,15 @@ async function fetchTwaps() {
       if (data && Array.isArray(data)) {
         data.forEach(item => {
           const row = `<tr>
-            <td>${item.rank || 'N/A'}</td>
-            <td>${item.address || 'N/A'}</td>
-            <td>${item.amount || 'N/A'}</td>
-            <td>${item.value || 'N/A'}</td>
-            <td>${item.supply || 'N/A'}</td>
+            <td>${item.action.twap.m || 'N/A'}</td>
+            <td>${item.user || 'N/A'}</td>
+            <td>${item.action.twap.a || 'N/A'}</td>
+            <td>${item.action.twap.b || 'N/A'}</td>
+            <td>${item.action.twap.s || 'N/A'}</td>
           </tr>`;
+          if (item.error === null) {
+            row += `<td>${item.error}</td>`;
+          }
           twapsTable.append(row);
         });
         dataExchange[TWAPsChartKey] = data;
