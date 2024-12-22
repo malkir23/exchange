@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.endpoints.twaps import route
+from app.endpoints import site, twaps
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -12,4 +12,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(route, prefix="/twaps", tags=["TWAPS"])
+app.include_router(site.route, prefix="/site", tags=["Site"])
+app.include_router(twaps.route, prefix="/twaps", tags=["TWAPS"])
