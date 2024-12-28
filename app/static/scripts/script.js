@@ -15,6 +15,8 @@ async function buildChart(keyData) {
   console.log(dataExchange);
 
   const dataPoints = TWAPsData.map((item) => item.action.twap.s);
+  const sellDataPoints = TWAPsData.filter((item) => item.action.twap.b === false).map((item) => item.action.twap.s);
+  const buyDataPoints = TWAPsData.filter((item) => item.action.twap.b === true).map((item) => item.action.twap.s);
 
   const ctx = document.getElementById(`${keyData}-data`).getContext('2d');
 
@@ -33,6 +35,22 @@ async function buildChart(keyData) {
           data: dataPoints,
           borderColor: 'rgba(75, 192, 192, 1)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderWidth: 2,
+          tension: 0.3,
+        },
+        {
+          label: 'Sell',
+          data: sellDataPoints,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderWidth: 2,
+          tension: 0.3,
+        },
+        {
+          label: 'Buy',
+          data: buyDataPoints,
+          borderColor: 'rgb(5, 172, 69)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
           borderWidth: 2,
           tension: 0.3,
         },
@@ -106,12 +124,31 @@ async function fetchTwaps() {
       if (data && Array.isArray(data)) {
         data.forEach(item => {
           const isSell = item.action.twap.b === false;
+          const dollarValue = price.markPx * item.action.twap.s;
+          data['dollarValue'] = dollarValue;
+          function calculateHours(timestamp) {
+            // Конвертуємо мітку часу в об'єкт Date
+            const date = new Date(timestamp);
+
+            // Отримуємо години з урахуванням місцевого часу
+            const hours = date.getUTCHours(); // Використовуємо UTC для стабільності
+
+            // Повертаємо розраховані години
+            return hours;
+          }
+
+          const calculatedHours = calculateHours(item.time);
+          if(!item.ended) {
+
+            console.log("Calculated Hours:", item.time, calculatedHours);
+          }
+
           const row = `<tr>
-            <td>${isSell ? 'SELL' : 'BUY' || 'N/A'}</td>
-            <td>${item.action.twap.s || 'N/A'}</td>
-            <td>${price.markPx * item.action.twap.s || 'N/A'} $</td>
-            <td>${item.user || 'N/A'}</td>
-            <td>${item.action.twap.s || 'N/A'}</td>
+          <td class="${isSell ? 'sell-color' : 'buy-color'}">${isSell ? 'SELL' : 'BUY' || 'N/A'}</td>
+          <td>${item.action.twap.s || 'N/A'}</td>
+          <td>${dollarValue || 'N/A'} $</td>
+          <td>${item.user || 'N/A'}</td>
+          <td>${item.ended || calculatedHours}</td>
           </tr>`;
 
           if (isSell) {
@@ -195,6 +232,6 @@ function toggleTable() {
 $(document).ready(function () {
   toggleTable();
   fetchTwaps();
-  setInterval(fetchTwaps, 100000); // Refresh data every 30 seconds
+  setInterval(fetchTwaps, 60000); // Refresh data every 1 minutes
   sortTable();
 });

@@ -184,3 +184,11 @@ filters select:focus {
 #TWAPs-table tbody tr:hover {
   background-color: #1b1b2e;
 }
+
+.buy-color{
+  color: #00ff00;
+}
+
+.sell-color{
+  color: #ff0000;
+}
