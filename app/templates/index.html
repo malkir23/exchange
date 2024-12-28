@@ -28,16 +28,38 @@
         <button class="tab-button active" data-tab="TWAPs-data">Data Table</button>
         <button class="tab-button" data-tab="TWAPs-chart">Chart</button>
       </div>
+
       <div id="TWAPs-data" class="tab-content active">
+
+        <div class="summary">
+          <div class="summary-card">
+            <h3>Total BUY Volume</h3> <span id="total-buy"></span>
+            <p id="total-buy-value">Loading...</p>
+          </div>
+          <div class="summary-card">
+            <h3>Total SELL Volume</h3> <span id="total-sell"></span>
+            <p id="total-sell-value">Loading...</p>
+          </div>
+        </div>
+
+        <div class="filters">
+          <label for="period-select">Period:</label>
+          <select id="period-select">
+            <option value="1d">1 Day</option>
+            <option value="1w">1 Week</option>
+            <option value="1m">1 Month</option>
+          </select>
+        </div>
+
         <h2>Daily Trades</h2>
         <table id="TWAPs-table">
           <thead>
             <tr>
-              <th>Side</th>
-              <th>Amount</th>
-              <th>Value</th>
-              <th>From</th>
-              <th>Progress</th>
+              <th data-type="string">Side</th>
+              <th data-type="number">Amount</th>
+              <th data-type="number">Value</th>
+              <th data-type="string">From</th>
+              <th data-type="string">Progress</th>
             </tr>
           </thead>
           <tbody>
@@ -45,21 +67,16 @@
           </tbody>
         </table>
       </div>
+
       <div id="TWAPs-chart" class="tab-content">
         <canvas id="TWAPs-chart-data" width="400" height="200"></canvas>
       </div>
     </div>
 
-    <!-- <div class="card">
-      <h2>Active Users</h2>
-      <p id="active-users">Loading...</p>
-    </div>
-    <div class="card">
-      <h2>Network Health</h2>
-      <p id="network-health">Loading...</p>
-    </div> -->
   </main>
 
   <footer>
     <p>&copy; 2024 KA Dashboard</p>
   </footer>
+</body>
+</html>

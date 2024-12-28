@@ -5,9 +5,8 @@ from fastapi import APIRouter
 route = APIRouter()
 
 @route.get("/get_twap_data")
-async def get_twap_data(tokken: str = 'PURR') -> JSONResponse:
+async def get_twap_data(tokken: str = 'HYPE') -> JSONResponse:
     url = f'https://api.hypurrscan.io/twap/{tokken}'
-    print(url)
     headers = {'Accept': 'application/json'}
 
     async with httpx.AsyncClient() as client:
