@@ -5,9 +5,11 @@ from fastapi import APIRouter
 route = APIRouter()
 
 @route.get("/get_twap_data")
-async def get_twap_data(tokken: str = 'HYPE') -> JSONResponse:
-    url = f'https://api.hypurrscan.io/twap/{tokken}'
+async def get_twap_data(token: str = 'HYPE') -> JSONResponse:
+    url = f'https://api.hypurrscan.io/twap/{token}'
     headers = {'Accept': 'application/json'}
+
+    print(f"Requesting data from {url}")
 
     async with httpx.AsyncClient() as client:
         try:

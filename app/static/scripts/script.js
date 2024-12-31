@@ -4,6 +4,7 @@ let dataExchange = {
   [TWAPsChartKey]: [],
 };
 let price = {};
+let tokenSelect = '';
 
 let TWAPsChart = null;
 
@@ -47,7 +48,7 @@ async function buildChart(keyData) {
   });
 }
 
-async function get_price(requestData) {
+async function getData(requestData) {
   try {
     const response = await $.ajax({
       url: "https://api.hyperliquid.xyz/info",
@@ -56,6 +57,33 @@ async function get_price(requestData) {
       data: JSON.stringify(requestData),
     });
     price = response;
+    console.log("API Response:", response);
+
+  } catch (error) {
+    console.error("API Error:", error);
+  }
+}
+
+async function getTokensNames() {
+  try {
+    const response = await $.ajax({
+      url: "/tokens/tokens_names",
+      type: "GET"
+    });
+
+    const tokens = response?.tokens;
+    if (!tokens) {
+      return;
+    }
+    tokenSelect = tokens[0];
+
+    fetchTwaps(tokenSelect);
+    for (const token of tokens) {
+      tokenSelect
+
+      $('#token-select').append(`<option value="${token}">${token}</option>`);
+    }
+
   } catch (error) {
     console.error("API Error:", error);
   }
@@ -77,14 +105,16 @@ function calculateHours(timestamp) {
   return `${date.getUTCHours()} hours ${date.getUTCMinutes()} minutes`;
 }
 
-async function fetchTwaps() {
-  await get_price({ tokenId: "0x0d01dc56dcaaca66ad901c959b4011ec", type: "tokenDetails" });
+async function fetchTwaps(tokenName) {
+  await getData({ tokenId: "0x0d01dc56dcaaca66ad901c959b4011ec", type: "tokenDetails" }, price);
+  const twapsTable = $('#TWAPs-table tbody');
+  twapsTable.empty();
   $.ajax({
     url: '/twaps/get_twap_data',
     method: 'GET',
+    dataType: 'json',
+    data: {'token':tokenName},
     success: function (data) {
-      const twapsTable = $('#TWAPs-table tbody');
-      twapsTable.empty();
       if (Array.isArray(data)) {
         const totalData = data.reduce((acc, item) => {
           const isSell = !item.action.twap.b;
@@ -167,10 +197,18 @@ function toggleTable() {
   });
 }
 
+function selectToken() {
+  $('#token-select').on('change', function () {
+    tokenSelect = $(this).val();
+    fetchTwaps(tokenSelect);
+    console.log('Selected token:', tokenSelect);
+  });
+}
+
 $(document).ready(function () {
-  toggleTable();
-  fetchTwaps();
-  setInterval(fetchTwaps, 60000);
+  getTokensNames();
+  selectToken();
+  setInterval(() => fetchTwaps(tokenSelect), 60000);
   sortTable();
 });
 

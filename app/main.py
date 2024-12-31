@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.endpoints import site, twaps
+from app.endpoints import site, twaps, tokens
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -18,3 +18,4 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(site.route, prefix="/site", tags=["Site"])
 app.include_router(twaps.route, prefix="/twaps", tags=["TWAPS"])
+app.include_router(tokens.route, prefix="/tokens", tags=["Tokens"])
