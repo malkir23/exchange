@@ -201,12 +201,12 @@ function selectToken() {
   $('#token-select').on('change', function () {
     tokenSelect = $(this).val();
     fetchTwaps(tokenSelect);
-    console.log('Selected token:', tokenSelect);
   });
 }
 
 $(document).ready(function () {
   getTokensNames();
+  toggleTable();
   selectToken();
   setInterval(() => fetchTwaps(tokenSelect), 60000);
   sortTable();
