@@ -42,7 +42,7 @@ async function buildChart(tokenData) {
 
     return [
       {
-        label: `${token} Total`,
+        label: `${token} USDS`,
         data: totalValues,
         borderColor: totalColor,
         backgroundColor: generateColor(0.2),
