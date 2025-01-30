@@ -1,4 +1,5 @@
 let tokensChart = null;
+const TOKEN_URL = 'http://localhost:8000/site/data';
 
 const payload = {
   type: 'userFills',
@@ -6,14 +7,22 @@ const payload = {
   aggregateByTime: true,
 };
 
-function cumulativeSum(values) {
-  let total = 0;
-  return values.map(value => total += value);
-}
+// function cumulativeSum(values) {
+//   let total = 0;
+//   return values.map(value => total += value);
+// }
 
 async function buildChart(tokenData) {
   const labels = Object.keys(tokenData).reverse();
   const tokens = Object.keys(tokenData[labels[0]]);
+  const totalAmountValues = Object.values(tokenData).map(dateData => {
+    const dataKey = Object.keys(dateData).find(key => dateData[key].totalAmount !== undefined);
+    if (dataKey) {
+      return dateData[dataKey].totalAmount;
+    } else {
+      return null;
+    }
+});
 
   const generateColor = (opacity = 1) => {
     const r = Math.floor(Math.random() * 255);
@@ -29,7 +38,6 @@ async function buildChart(tokenData) {
     const amountValues = labels.map(
       (date) => tokenData[date][token]?.amount || 0
     );
-    const totalAmountValues = cumulativeSum(totalValues);
 
     const totalColor = generateColor(0.6);
     const amountColor = generateColor(0.6);
@@ -126,23 +134,16 @@ async function buildChart(tokenData) {
 
 async function sendPostRequest() {
   try {
-    const response = await fetch('https://api-ui.hyperliquid.xyz/info', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(TOKEN_URL, {method: 'GET' });
+    console.log('✅ Data Fetched Successfully:', response);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-
-    const preparedData = serializeData(data);
-
-    await buildChart(preparedData);
+    console.log('✅ Data Fetched Successfully:', data['data']);
+    await buildChart(data['data']);
   } catch (error) {
     console.error('Error during POST request:', error);
   }

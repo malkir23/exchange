@@ -1,8 +1,9 @@
-import re
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from app.settings.templates import get_templates
 from app.settings.base import get_collection
+from datetime import datetime
+from pymongo import UpdateOne
 
 route = APIRouter()
 
@@ -20,31 +21,61 @@ async def read_token(request: Request):
 @route.post("/save-data")
 async def trigger_data_fetch(request: Request):
     data_json = await request.json()
+
+    if not isinstance(data_json, dict):
+        raise HTTPException(status_code=400, detail="Invalid JSON format, expected a dictionary")
+
     collection = await get_collection("daily_data")
+    bulk_operations = []
 
-    inserted_count = 0
-    updated_count = 0
+    for date, tokens in data_json.items():
+        if not isinstance(date, str):
+            continue
+        try:
+            formatted_date = datetime.today().strftime("%m/%d/%Y")
+        except ValueError:
+            continue
 
-    for item in data_json:
-        result = await collection.update_one(
-            {"_id": item["_id"]},
-            {"$set": item},
-            upsert=True
-        )
-        if result.matched_count > 0:
-            updated_count += 1
+        if date != formatted_date:
+            continue
+
+        existing_doc = await collection.find_one({"date": formatted_date})
+
+        if existing_doc:
+            bulk_operations.append(
+                UpdateOne(
+                    {"date": date},
+                    {"$set": tokens},
+                    upsert=True
+                )
+            )
         else:
-            inserted_count += 1
+            tokens.update({"date": date})
+            bulk_operations.append(
+                UpdateOne(
+                    {"date": date},
+                    {"$setOnInsert":  tokens},
+                    upsert=True
+                )
+            )
 
-    return {
-        "status": "Task completed",
-        "inserted_count": inserted_count,
-        "updated_count": updated_count
-    }
+    if bulk_operations:
+        result = await collection.bulk_write(bulk_operations)
+        return {
+            "status": "Task completed",
+            "inserted_count": result.upserted_count,
+            "updated_count": result.modified_count
+        }
 
+    return {"status": "No data to process"}
+
+def serialize_document(document):
+    document["_id"] = str(document["_id"])
+    return document
 
 @route.get("/data")
 async def get_stored_data():
     collection = await get_collection("daily_data")
-    data = await collection.find().to_list(100)  # Отримуємо до 100 записів
+    cursor = collection.find()
+    data = {doc["date"]: serialize_document(doc) async for doc in cursor}
     return {"data": data}

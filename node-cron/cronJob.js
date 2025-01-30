@@ -2,15 +2,38 @@ const cron = require('node-cron');
 require('dotenv').config(); // Load environment variables from .env file
 
 const API_URL = 'https://api-ui.hyperliquid.xyz/info';
-const FASTAPI_URL =
-  `${process.env.FASTAPI_URL }/site/save-data` || 'http://localhost:8000/save-data/';
+const FASTAPI_URL = `${process.env.FASTAPI_URL }/site/save-data`;
 
+
+function calculateCumulativeSum(data) {
+  const dates = Object.keys(data).sort((a, b) => new Date(a) - new Date(b)); // Сортуємо за датою
+  let cumulativeSum = 0;
+
+  const result = {};
+
+  for (const date of dates) {
+    const tokens = data[date];
+
+    result[date] = {};
+
+    for (const token in tokens) {
+      cumulativeSum += tokens[token].total;
+      result[date][token] = {
+        total: tokens[token].total,
+        amount: tokens[token].amount,
+        totalAmount: cumulativeSum,
+      };
+    }
+  }
+
+  return result;
+}
 
   function serializeData(tokenData) {
     const sumDate = {};
 
     for (const item of tokenData) {
-      const time = new Date(item.time).toLocaleDateString('en-US');
+      const time =  new Date(item.time).toLocaleDateString('en-US');
       const amount = Number(item.sz);
       const total = Number(item.px) * amount;
       const token = item.feeToken;
@@ -21,9 +44,12 @@ const FASTAPI_URL =
       sumDate[time][token].total += total;
       sumDate[time][token].amount += amount;
     }
+    const result = calculateCumulativeSum(sumDate);
+    console.log('✅ Data Serialized Successfully:', result);
 
-    return sumDate;
+    return result;
   }
+
 // Function to fetch data from API
 async function fetchData() {
   try {
@@ -39,9 +65,7 @@ async function fetchData() {
 
     const response = await fetch(API_URL, {
       method: 'POST', // HTTP method
-      headers: {
-        'Content-Type': 'application/json', // Specify JSON content type
-      },
+      headers: headers,
       body: JSON.stringify(payload), // Convert payload to JSON string
     });
 
@@ -51,9 +75,6 @@ async function fetchData() {
     }
 
     const data = await response.json();
-    console.log('✅ Data Fetched Successfully:', data);
-
-    console.log('✅ Data Fetched Successfully:', data);
    const mongoData = await serializeData(data);
    console.log('✅ Data Serialized Successfully:', mongoData);
 
@@ -72,7 +93,7 @@ async function fetchData() {
 }
 
 // Schedule the cron job to run every minute
-cron.schedule('0 * * * *', () => {
+cron.schedule('* * * * *', () => {
   console.log('⏳ Running Scheduled Task: Fetch Data');
   fetchData();
 });
