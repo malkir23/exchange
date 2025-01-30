@@ -1,5 +1,5 @@
 let tokensChart = null;
-const TOKEN_URL = 'http://localhost:8000/site/data';
+const TOKEN_URL = '/site/data';
 
 const payload = {
   type: 'userFills',
