@@ -29,8 +29,6 @@ async def trigger_data_fetch(request: Request):
     bulk_operations = []
 
     for date, tokens in data_json.items():
-        if not isinstance(date, str):
-            continue
         try:
             formatted_date = datetime.today().strftime("%m/%d/%Y")
         except ValueError:
