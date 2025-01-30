@@ -17,13 +17,13 @@ function calculateCumulativeSum(data) {
     result[date] = {};
 
     for (const token in tokens) {
-      cumulativeSum += tokens[token].total;
+      cumulativeSum += tokens[token].amount;
       result[date][token] = {
         total: tokens[token].total,
         amount: tokens[token].amount,
-        totalAmount: cumulativeSum
       };
     }
+    result[date]['totalAmount'] = cumulativeSum
   }
 
   return result;
@@ -99,4 +99,4 @@ cron.schedule('0 * * * *', () => {
 });
 
 // Keep the script running
-console.log('🕒 Cron job started. Fetching data every minute...');
+console.log('🕒 Cron job started. Fetching data every hour...');

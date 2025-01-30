@@ -2,8 +2,9 @@ from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from app.settings.templates import get_templates
 from app.settings.base import get_collection
-from datetime import datetime
 from pymongo import UpdateOne
+from app.services.mongo_services import from_mongo_to_doc
+from app.services.date_services import date_format, previous_date
 
 route = APIRouter()
 
@@ -28,14 +29,10 @@ async def trigger_data_fetch(request: Request):
     bulk_operations = []
 
     for date, tokens in data_json.items():
-        try:
-            formatted_date = datetime.today().strftime("%m/%d/%Y")
-            formatted_date = formatted_date if formatted_date[0] != "0" else formatted_date[1:]
-        except ValueError:
-            continue
+        formatted_date =   date_format()
 
-        if date != str(formatted_date):
-            continue
+        # if date != str(formatted_date):
+        #     continue
 
         existing_doc = await collection.find_one({"date": formatted_date})
         if existing_doc:
@@ -47,6 +44,11 @@ async def trigger_data_fetch(request: Request):
                 )
             )
         else:
+            _previous_date = previous_date()
+            previous_doc = await collection.find_one({"date": _previous_date})
+            if previous_doc:
+                total_amount =  previous_doc.get("totalAmount", 0) + tokens.get("totalAmount", 0)
+                tokens.update({"totalAmount": total_amount})
             tokens.update({"date": date})
             bulk_operations.append(
                 UpdateOne(
@@ -66,13 +68,9 @@ async def trigger_data_fetch(request: Request):
 
     return {"status": "No data to process"}
 
-def serialize_document(document):
-    document["_id"] = str(document["_id"])
-    return document
-
 @route.get("/data")
 async def get_stored_data():
     collection = await get_collection("daily_data")
     cursor = collection.find()
-    data = {doc["date"]: serialize_document(doc) async for doc in cursor}
+    data = {doc["date"]: from_mongo_to_doc(doc) async for doc in cursor}
     return {"data": data}

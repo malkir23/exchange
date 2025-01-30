@@ -7,22 +7,18 @@ const payload = {
   aggregateByTime: true,
 };
 
-// function cumulativeSum(values) {
-//   let total = 0;
-//   return values.map(value => total += value);
-// }
+async function getLables(tokenData) {
+  const allLabels = Object.keys(tokenData).flatMap(date => {
+    return Object.keys(tokenData[date])
+        .filter(key => key !== '_id' && key !== 'date' && key !== 'totalAmount');
+});
+const uniqueLabels = [...new Set(allLabels)]; // Remove duplicates
+  return  uniqueLabels ;
+}
 
 async function buildChart(tokenData) {
-  const labels = Object.keys(tokenData).reverse();
-  const tokens = Object.keys(tokenData[labels[0]]);
-  const totalAmountValues = Object.values(tokenData).map(dateData => {
-    const dataKey = Object.keys(dateData).find(key => dateData[key].totalAmount !== undefined);
-    if (dataKey) {
-      return dateData[dataKey].totalAmount;
-    } else {
-      return null;
-    }
-});
+  const labels = Object.keys(tokenData);
+  const tokens = await getLables(tokenData);
 
   const generateColor = (opacity = 1) => {
     const r = Math.floor(Math.random() * 255);
@@ -38,6 +34,7 @@ async function buildChart(tokenData) {
     const amountValues = labels.map(
       (date) => tokenData[date][token]?.amount || 0
     );
+    const totalAmountValues = labels.map((date) => tokenData[date].totalAmount);
 
     const totalColor = generateColor(0.6);
     const amountColor = generateColor(0.6);
@@ -150,4 +147,5 @@ async function sendPostRequest() {
 }
 $(document).ready(function () {
   sendPostRequest();
+  setInterval(sendPostRequest, 3600000); // 3600000 milliseconds = 1 hour
 });
