@@ -38,7 +38,7 @@ async def trigger_data_fetch(request: Request):
             continue
 
         existing_doc = await collection.find_one({"date": formatted_date})
-
+        print(date, tokens)
         if existing_doc:
             bulk_operations.append(
                 UpdateOne(
