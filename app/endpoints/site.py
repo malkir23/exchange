@@ -34,11 +34,10 @@ async def trigger_data_fetch(request: Request):
         except ValueError:
             continue
 
-        # if date != str(formatted_date):
-        #     continue
+        if date != str(formatted_date):
+            continue
 
         existing_doc = await collection.find_one({"date": formatted_date})
-        print(date, tokens)
         if existing_doc:
             bulk_operations.append(
                 UpdateOne(

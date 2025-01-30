@@ -93,7 +93,7 @@ async function fetchData() {
 }
 
 // Schedule the cron job to run every minute
-cron.schedule('* * * * *', () => {
+cron.schedule('0 * * * *', () => {
   console.log('⏳ Running Scheduled Task: Fetch Data');
   fetchData();
 });
