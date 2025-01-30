@@ -21,7 +21,6 @@ async def read_token(request: Request):
 @route.post("/save-data")
 async def trigger_data_fetch(request: Request):
     data_json = await request.json()
-
     if not isinstance(data_json, dict):
         raise HTTPException(status_code=400, detail="Invalid JSON format, expected a dictionary")
 
@@ -31,11 +30,12 @@ async def trigger_data_fetch(request: Request):
     for date, tokens in data_json.items():
         try:
             formatted_date = datetime.today().strftime("%m/%d/%Y")
+            formatted_date = formatted_date if formatted_date[0] != "0" else formatted_date[1:]
         except ValueError:
             continue
 
-        if date != formatted_date:
-            continue
+        # if date != str(formatted_date):
+        #     continue
 
         existing_doc = await collection.find_one({"date": formatted_date})
         print(date, tokens)

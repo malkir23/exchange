@@ -21,7 +21,7 @@ function calculateCumulativeSum(data) {
       result[date][token] = {
         total: tokens[token].total,
         amount: tokens[token].amount,
-        totalAmount: cumulativeSum,
+        totalAmount: cumulativeSum
       };
     }
   }
