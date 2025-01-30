@@ -36,32 +36,32 @@ async function buildChart(tokenData) {
     );
     const totalAmountValues = labels.map((date) => tokenData[date].totalAmount);
 
-    const totalColor = generateColor(0.6);
-    const amountColor = generateColor(0.6);
+    // const totalColor = generateColor(0.6);
+    // const amountColor = generateColor(0.6);
     const totalAmountColor = "rgba(255, 99, 132, 1)";
 
     return [
       {
         label: `${token} USDS`,
         data: totalValues,
-        borderColor: totalColor,
-        backgroundColor: generateColor(0.2),
+        borderColor: "rgba(20, 223, 155, 1)",
+        backgroundColor: "rgba(20, 223, 155, 0.2)",
         borderWidth: 2,
         tension: 0.3,
         fill: true,
         type: "bar",
       },
-      {
-        label: `${token} Amount`,
-        data: amountValues,
-        borderColor: amountColor,
-        backgroundColor: generateColor(0.2),
-        borderWidth: 2,
-        tension: 0.3,
-        borderDash: [5, 5],
-        fill: false,
-        type: "bar", // Keep as bar
-      },
+      // {
+      //   label: `${token} Amount`,
+      //   data: amountValues,
+      //   borderColor: amountColor,
+      //   backgroundColor: generateColor(0.2),
+      //   borderWidth: 2,
+      //   tension: 0.3,
+      //   borderDash: [5, 5],
+      //   fill: false,
+      //   type: "bar", // Keep as bar
+      // },
       {
         label: `${token} Total Amount`,
         data: totalAmountValues,
