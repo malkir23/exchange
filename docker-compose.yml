@@ -8,13 +8,42 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
+      - MONGO_URI=mongodb://mongo:27017
     volumes:
       - .:/project_exchange
+    depends_on:
+      - mongo
     command: >
       uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: always
     networks:
       - app-network
+
+  node-cron:
+    build: ./node-cron
+    container_name: node-cron-job
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - FASTAPI_URL=http://fastapi:8000
+    networks:
+      - app-network
+    restart: always
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+    driver: local
 
 networks:
   app-network:

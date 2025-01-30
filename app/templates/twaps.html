@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/static/scripts/twap.js"></script>
+{% endblock %}
+{% block title %}
+  TWAPs
+{% endblock %}
+{% block content %}
+<main class="dashboard">
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab-button active" data-tab="TWAPs-data">Data Table</button>
+      <button class="tab-button" data-tab="TWAPs-chart">Chart</button>
+    </div>
+
+    <div id="TWAPs-data" class="tab-content active">
+
+      <div class="summary">
+        <div class="summary-card">
+          <div class="summary-card-header">
+            <h3>Total BUY TWAPS</h3>
+            <span id="total-buy" class="buy-color">0</span>
+          </div>
+          <p id="total-buy-value" class="buy-color">Loading...</p>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-header">
+            <h3>Total SELL TWAPS</h3>
+            <span id="total-sell" class="sell-color">0</span>
+          </div>
+          <p id="total-sell-value" class="sell-color">Loading...</p>
+        </div>
+      </div>
+
+
+      <div class="filters">
+        <label for="period-select">Period:</label>
+        <select id="period-select">
+          <option value="1d">1 Day</option>
+          <option value="1w">1 Week</option>
+          <option value="1m">1 Month</option>
+        </select>
+      </div>
+
+      <div class="filters">
+        <label for="token-select">Tokens:</label>
+        <select id="token-select"></select>
+      </div>
+
+      <h2>Daily Trades</h2>
+      <table id="TWAPs-table">
+        <thead>
+          <tr>
+            <th data-type="string">Side</th>
+            <th data-type="number">Amount</th>
+            <th data-type="number">Value</th>
+            <th data-type="string">From</th>
+            <th data-type="number">Duration</th>
+            <th data-type="string">Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div id="TWAPs-chart" class="tab-content">
+      <canvas id="TWAPs-chart-data" width="400" height="200"></canvas>
+    </div>
+  </div>
+
+</main>
+{% endblock %}
+
