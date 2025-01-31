@@ -82,6 +82,7 @@ async function buildChart(tokenData) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
