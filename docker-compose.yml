@@ -24,9 +24,6 @@ services:
     container_name: node-cron-job
     depends_on:
       - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017
-      - FASTAPI_URL=http://fastapi:8000
     networks:
       - app-network
     restart: always
@@ -34,8 +31,6 @@ services:
   mongo:
     image: mongo:6
     container_name: mongo
-    ports:
-      - "27017:27017"
     volumes:
       - mongo-data:/data/db
     networks:

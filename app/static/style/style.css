@@ -21,14 +21,14 @@ nav {
   margin-top: 1rem;
 }
 
-nav a {
+.link {
   color: #8a8acb;
   text-decoration: none;
   margin: 0 10px;
   font-weight: 500;
 }
 
-nav a:hover {
+.link:hover {
   color: #ffffff;
 }
 

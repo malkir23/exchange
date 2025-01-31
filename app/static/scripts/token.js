@@ -1,19 +1,15 @@
 let tokensChart = null;
 const TOKEN_URL = '/site/data';
 
-const payload = {
-  type: 'userFills',
-  user: '0xfefefefefefefefefefefefefefefefefefefefe',
-  aggregateByTime: true,
-};
 
 async function getLables(tokenData) {
-  const allLabels = Object.keys(tokenData).flatMap(date => {
-    return Object.keys(tokenData[date])
-        .filter(key => key !== '_id' && key !== 'date' && key !== 'totalAmount');
-});
-const uniqueLabels = [...new Set(allLabels)]; // Remove duplicates
-  return  uniqueLabels ;
+  const allLabels = Object.keys(tokenData).flatMap((date) => {
+    return Object.keys(tokenData[date]).filter(
+      (key) => key !== '_id' && key !== 'date' && key !== 'totalAmount'
+    );
+  });
+  const uniqueLabels = [...new Set(allLabels)]; // Remove duplicates
+  return uniqueLabels;
 }
 
 async function buildChart(tokenData) {
@@ -38,41 +34,41 @@ async function buildChart(tokenData) {
 
     // const totalColor = generateColor(0.6);
     // const amountColor = generateColor(0.6);
-    const totalAmountColor = "rgba(255, 99, 132, 1)";
+    const totalAmountColor = 'rgba(255, 99, 132, 1)';
 
     return [
       {
-        label: `${token} USDS`,
+        label: `USDC`,
         data: totalValues,
-        borderColor: "rgba(20, 223, 155, 1)",
-        backgroundColor: "rgba(20, 223, 155, 0.2)",
+        borderColor: 'rgba(20, 223, 155, 1)',
+        backgroundColor: 'rgba(20, 223, 155, 0.2)',
         borderWidth: 2,
         tension: 0.3,
         fill: true,
-        type: "bar",
+        type: 'bar',
       },
-      // {
-      //   label: `${token} Amount`,
-      //   data: amountValues,
-      //   borderColor: amountColor,
-      //   backgroundColor: generateColor(0.2),
-      //   borderWidth: 2,
-      //   tension: 0.3,
-      //   borderDash: [5, 5],
-      //   fill: false,
-      //   type: "bar", // Keep as bar
-      // },
       {
-        label: `${token} Total Amount`,
+        label: `HYPE`,
+        data: amountValues,
+        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderWidth: 2,
+        tension: 0.3,
+        borderDash: [5, 5],
+        fill: false,
+        type: 'bar',
+      },
+      {
+        label: `AF HYPE`,
         data: totalAmountValues,
         borderColor: totalAmountColor,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderWidth: 2,
         tension: 0.3,
         borderDash: [2, 2],
         fill: false,
-        type: "line",
-        yAxisID: "y1",
+        type: 'line',
+        yAxisID: 'y1',
       },
     ];
   });
@@ -115,7 +111,7 @@ async function buildChart(tokenData) {
           beginAtZero: true,
         },
         y1: {
-          position: "right",
+          position: 'right',
           grid: {
             drawOnChartArea: false,
           },
@@ -131,7 +127,7 @@ async function buildChart(tokenData) {
 
 async function sendPostRequest() {
   try {
-    const response = await fetch(TOKEN_URL, {method: 'GET' });
+    const response = await fetch(TOKEN_URL, { method: 'GET' });
     console.log('✅ Data Fetched Successfully:', response);
 
     if (!response.ok) {

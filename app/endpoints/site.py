@@ -23,39 +23,28 @@ async def read_token(request: Request):
 async def trigger_data_fetch(request: Request):
     data_json = await request.json()
     if not isinstance(data_json, dict):
-        raise HTTPException(status_code=400, detail="Invalid JSON format, expected a dictionary")
+        raise HTTPException(
+            status_code=400, detail="Invalid JSON format, expected a dictionary"
+        )
 
     collection = await get_collection("daily_data")
     bulk_operations = []
 
     for date, tokens in data_json.items():
-        formatted_date =   date_format()
+        formatted_date = date_format()
 
-        # if date != str(formatted_date):
-        #     continue
+        if date != str(formatted_date):
+            continue
 
         existing_doc = await collection.find_one({"date": formatted_date})
         if existing_doc:
             bulk_operations.append(
-                UpdateOne(
-                    {"date": date},
-                    {"$set": tokens},
-                    upsert=True
-                )
+                UpdateOne({"date": date}, {"$set": tokens}, upsert=True)
             )
         else:
-            _previous_date = previous_date()
-            previous_doc = await collection.find_one({"date": _previous_date})
-            if previous_doc:
-                total_amount =  previous_doc.get("totalAmount", 0) + tokens.get("totalAmount", 0)
-                tokens.update({"totalAmount": total_amount})
             tokens.update({"date": date})
             bulk_operations.append(
-                UpdateOne(
-                    {"date": date},
-                    {"$setOnInsert":  tokens},
-                    upsert=True
-                )
+                UpdateOne({"date": date}, {"$setOnInsert": tokens}, upsert=True)
             )
 
     if bulk_operations:
@@ -63,10 +52,11 @@ async def trigger_data_fetch(request: Request):
         return {
             "status": "Task completed",
             "inserted_count": result.upserted_count,
-            "updated_count": result.modified_count
+            "updated_count": result.modified_count,
         }
 
     return {"status": "No data to process"}
+
 
 @route.get("/data")
 async def get_stored_data():

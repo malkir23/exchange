@@ -1,67 +1,99 @@
 const cron = require('node-cron');
-require('dotenv').config(); // Load environment variables from .env file
+const WebSocket = require('ws');
+require('dotenv').config();
 
-const API_URL = 'https://api-ui.hyperliquid.xyz/info';
-const FASTAPI_URL = `${process.env.FASTAPI_URL }/site/save-data`;
+const API_URL = process.env.API_URL;
+const FASTAPI_URL = `${process.env.FASTAPI_URL}/site/save-data`;
+const WEBSOCKET_URL = process.env.WEBSOCKET_URL;
+const USER = process.env.USER;
+const headers = {
+  'Content-Type': 'application/json',
+};
 
+let ws;
+let cumulativeSum = 0;
 
-function calculateCumulativeSum(data) {
-  const dates = Object.keys(data).sort((a, b) => new Date(a) - new Date(b)); // Сортуємо за датою
-  let cumulativeSum = 0;
+function getTodayDate() {
+  const today = new Date();
+  const day = today.getDate();
+  const month = today.getMonth() + 1;
+  const year = today.getFullYear();
 
-  const result = {};
-
-  for (const date of dates) {
-    const tokens = data[date];
-
-    result[date] = {};
-
-    for (const token in tokens) {
-      cumulativeSum += tokens[token].amount;
-      result[date][token] = {
-        total: tokens[token].total,
-        amount: tokens[token].amount,
-      };
-    }
-    result[date]['totalAmount'] = cumulativeSum
-  }
-
-  return result;
+  return `${month}/${day}/${year}`;
 }
 
-  function serializeData(tokenData) {
-    const sumDate = {};
+function connectWebSocket() {
+  ws = new WebSocket(WEBSOCKET_URL);
 
-    for (const item of tokenData) {
-      const time =  new Date(item.time).toLocaleDateString('en-US');
-      const amount = Number(item.sz);
-      const total = Number(item.px) * amount;
-      const token = item.feeToken;
+  ws.onopen = () => {
+    console.log('✅ WebSocket підключено');
 
-      sumDate[time] ??= {};
-      sumDate[time][token] ??= { total: 0, amount: 0 };
+    const subscriptionRequest = {
+      method: 'subscribe',
+      subscription: {
+        type: 'webData2',
+        user: USER,
+      },
+    };
 
-      sumDate[time][token].total += total;
-      sumDate[time][token].amount += amount;
+    ws.send(JSON.stringify(subscriptionRequest));
+    console.log('📤 Надіслано запит:', subscriptionRequest);
+  };
+
+  ws.onmessage = (event) => {
+    const spotState = JSON.parse(event.data)?.data?.spotState;
+    if (!spotState) {
+      return;
     }
-    const result = calculateCumulativeSum(sumDate);
-    console.log('✅ Data Serialized Successfully:', result);
+    const balances = spotState['balances'];
+    for (const balance of balances) {
+      if (balance.coin === 'HYPE') {
+        cumulativeSum = balance.total;
+        console.log('🔢 Кумулятивна сума:', cumulativeSum);
+        ws.close();
+      }
+    }
+  };
 
-    return result;
+  ws.onerror = (error) => {
+    console.error('❌ Помилка WebSocket:', error);
+  };
+
+  ws.onclose = (event) => {
+    setTimeout(() => {
+      connectWebSocket();
+    }, 600000);
+    console.log('🔌 WebSocket закрито, перепідключення через 1 годину...');
+  };
+}
+
+function serializeData(tokenData) {
+  const sumDate = {};
+
+  for (const item of tokenData) {
+    const time = new Date(item.time).toLocaleDateString('en-US');
+    const amount = Number(item.sz);
+    const total = Number(item.px) * amount;
+    const token = item.feeToken;
+
+    sumDate[time] ??= {};
+    sumDate[time][token] ??= { total: 0, amount: 0 };
+
+    sumDate[time][token].total += total;
+    sumDate[time][token].amount += amount;
   }
+  return sumDate;
+}
 
 // Function to fetch data from API
 async function fetchData() {
   try {
     const payload = {
       type: 'userFills',
-      user: '0xfefefefefefefefefefefefefefefefefefefefe',
+      user: USER,
       aggregateByTime: true,
     };
 
-    const headers = {
-      'Content-Type': 'application/json',
-    };
 
     const response = await fetch(API_URL, {
       method: 'POST', // HTTP method
@@ -75,16 +107,21 @@ async function fetchData() {
     }
 
     const data = await response.json();
-   const mongoData = await serializeData(data);
-   console.log('✅ Data Serialized Successfully:', mongoData);
+    const mongoData = await serializeData(data);
+    const date = getTodayDate();
+    console.log('✅ Data Fetched Successfully:', mongoData);
+    console.log('📅 Today\'s Date:', date);
+
+    mongoData[date]['totalAmount'] = cumulativeSum;
+    //  const test =  await connectWebSocket();
+
+    console.log('✅ Data Serialized Successfully:', mongoData);
 
     // Send data to FastAPI endpoint
     await fetch(FASTAPI_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body:  JSON.stringify(mongoData),
+      headers:headers,
+      body: JSON.stringify(mongoData),
     });
     console.log('✅ Data Sent to FastAPI Successfully');
   } catch (error) {
@@ -92,11 +129,9 @@ async function fetchData() {
   }
 }
 
-// Schedule the cron job to run every minute
-cron.schedule('0 * * * *', () => {
+cron.schedule('* * * * *', () => {
   console.log('⏳ Running Scheduled Task: Fetch Data');
   fetchData();
 });
-
-// Keep the script running
+connectWebSocket();
 console.log('🕒 Cron job started. Fetching data every hour...');

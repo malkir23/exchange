@@ -12,18 +12,39 @@
 </head>
 <body>
 	<header>
-    <h1>Hypurr Dashboard</h1>
+    <h1 ><a class="link"  href="https://x.com/hyper_updates">Hyper Updates</a></h1>
     <nav>
-      <a href="/site">TWAPs</a>
-      <a href="/site/tokens">Tokens</a>
-      <a href="#">Network</a>
-      <a href="#">Settings</a>
+      <a class="link" href="/site">TWAPs</a>
+      <a class="link" href="/site/tokens">Tokens</a>
     </nav>
   </header>
     <div id="content">{% block content %}{% endblock %}</div>
 		<footer>
 			{% block footer %}
-				<p>&copy; 2024 KA Dashboard</p>
+      <div class="tabs"><a href="https://app.hyperliquid.xyz/join/HYPERX"><button class="tab-button active" > Trade on Hyperliquid</button></a></div>
+      <h1>Assistance Fund Dashboard Overview</h1>
+
+      <p>
+        The Assistance Fund is a dedicated fund designed to support the <b><a class="link" href="https://x.com/hyper_updates">$HYPE</a></b> ecosystem.
+        Its primary goal is to purchase tokens from the open market, reducing supply pressure
+        and reinforcing token value.
+      </p>
+
+      <div class="section">
+        <h2>What This Dashboard Tracks</h2>
+
+        <ul>
+          <li>The total number of <a class="link" href="https://x.com/hyper_updates">$HYPE</a> tokens currently held by the Assistance Fund.</li>
+          <li>The number of <a class="link" href="https://x.com/hyper_updates">$HYPE</a> tokens purchased during the current day.</li>
+          <li>The amount of USDC spent on <a class="link" href="https://x.com/hyper_updates">$HYPE</a> token buybacks.</li>
+        </ul>
+
+        <p>
+          This tool ensures transparency in the fund’s operations, helping users understand
+          how the Assistance Fund supports market stability and contributes to the
+          long-term growth of the Hyperliquid ecosystem.
+        </p>
+      </div>
 			{% endblock %}
 		</footer>
 </body>
