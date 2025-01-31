@@ -3,7 +3,7 @@ from app.endpoints import site, twaps, tokens
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
 app.add_middleware(
     CORSMiddleware,
@@ -12,6 +12,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.openapi_schema = None
 
 # Додаємо маршрути для статичних файлів, якщо вони є
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -19,3 +20,4 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(site.route, prefix="/site", tags=["Site"])
 app.include_router(twaps.route, prefix="/twaps", tags=["TWAPS"])
 app.include_router(tokens.route, prefix="/tokens", tags=["Tokens"])
+
