@@ -39,13 +39,6 @@ nav {
   padding: 2rem;
 }
 
-@media (max-width: 600px) {
-  .dashboard {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
-}
-
 .card {
   background-color: #282846;
   border-radius: 8px;
