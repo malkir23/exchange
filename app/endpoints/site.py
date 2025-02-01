@@ -9,12 +9,12 @@ from app.services.date_services import date_format
 route = APIRouter()
 
 
-@route.get("/", response_class=HTMLResponse)
+@route.get("/twaps", response_class=HTMLResponse)
 async def read_root(request: Request):
     return get_templates().TemplateResponse("twaps.html", {"request": request})
 
 
-@route.get("/tokens", response_class=HTMLResponse)
+@route.get("/", response_class=HTMLResponse)
 async def read_token(request: Request):
     return get_templates().TemplateResponse("tokens.html", {"request": request})
 

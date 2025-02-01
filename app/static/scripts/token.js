@@ -1,5 +1,5 @@
 let tokensChart = null;
-const TOKEN_URL = '/site/data';
+const TOKEN_URL = '/data';
 
 
 async function getLables(tokenData) {

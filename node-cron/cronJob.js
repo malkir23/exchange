@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 require('dotenv').config();
 
 const API_URL = process.env.API_URL;
-const FASTAPI_URL = `${process.env.FASTAPI_URL}/site/save-data`;
+const FASTAPI_URL = `${process.env.FASTAPI_URL}/save-data`;
 const WEBSOCKET_URL = process.env.WEBSOCKET_URL;
 const USER = process.env.USER;
 const headers = {
