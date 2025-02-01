@@ -33,7 +33,6 @@ async def trigger_data_fetch(request: Request):
     for date, tokens in data_json.items():
         formatted_date = date_format()
 
-        print(date, formatted_date)
         # if date != str(formatted_date):
         #     continue
 
