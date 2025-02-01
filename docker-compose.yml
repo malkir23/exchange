@@ -3,7 +3,7 @@ version: '3.8'
 services:
   fastapi:
     build: .
-    container_name: fastapi-app
+    container_name: fastapi
     expose:
       - "8000"
     ports:
@@ -15,11 +15,10 @@ services:
       - .:/project_exchange
     depends_on:
       - mongo
-    command: >
-      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     restart: always
     networks:
       - app-network
+      - caddy
 
   node-cron:
     build: ./node-cron
@@ -57,5 +56,6 @@ volumes:
     driver: local
 
 networks:
+  caddy:
   app-network:
     driver: bridge
