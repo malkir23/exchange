@@ -4,8 +4,6 @@ services:
   fastapi:
     build: .
     container_name: fastapi
-    expose:
-      - "8000"
     ports:
       - "8000:8000"
     environment:
@@ -15,10 +13,8 @@ services:
       - .:/project_exchange
     depends_on:
       - mongo
-    restart: always
     networks:
       - app-network
-      - caddy
 
   node-cron:
     build: ./node-cron
@@ -56,6 +52,5 @@ volumes:
     driver: local
 
 networks:
-  caddy:
   app-network:
     driver: bridge
