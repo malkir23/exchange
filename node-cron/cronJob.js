@@ -13,13 +13,17 @@ const headers = {
 let ws;
 let cumulativeSum = 0;
 
-function getTodayDate() {
-  const today = new Date();
-  const day = today.getDate();
-  const month = today.getMonth() + 1;
-  const year = today.getFullYear();
+function getTodayDate(dateBefore=null){
+  if (!dateBefore){
+    dateBefore = new Date();
+  } else {
+    dateBefore = new Date(dateBefore);
+   }
+  const day = dateBefore.getDate();
+  const month = dateBefore.getMonth() + 1;
+  const year = dateBefore.getFullYear();
 
-  return `${month}/${day}/${year}`;
+  return `${day}-${month}-${year}`;
 }
 
 function connectWebSocket() {
@@ -71,7 +75,7 @@ function serializeData(tokenData) {
   const sumDate = {};
 
   for (const item of tokenData) {
-    const time = new Date(item.time).toLocaleDateString('en-US');
+    const time =  getTodayDate(item.time);
     const amount = Number(item.sz);
     const total = Number(item.px) * amount;
     const token = item.feeToken;

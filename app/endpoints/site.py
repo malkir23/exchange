@@ -4,7 +4,7 @@ from app.settings.templates import get_templates
 from app.settings.base import get_collection
 from pymongo import UpdateOne
 from app.services.mongo_services import from_mongo_to_doc
-from app.services.date_services import date_format, previous_date
+from app.services.date_services import date_format
 
 route = APIRouter()
 
@@ -32,6 +32,10 @@ async def trigger_data_fetch(request: Request):
 
     for date, tokens in data_json.items():
         formatted_date = date_format()
+
+        print(date, formatted_date)
+        # if date != str(formatted_date):
+        #     continue
 
         existing_doc = await collection.find_one({"date": formatted_date})
         if existing_doc:

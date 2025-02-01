@@ -15,6 +15,7 @@ async function getLables(tokenData) {
 async function buildChart(tokenData) {
   const labels = Object.keys(tokenData);
   const tokens = await getLables(tokenData);
+console.log('🚀 ~ file: token.js ~ line 31 ~ buildChart ~ labels', labels.reverse());
 
   const generateColor = (opacity = 1) => {
     const r = Math.floor(Math.random() * 255);
