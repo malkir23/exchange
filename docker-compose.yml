@@ -34,20 +34,7 @@ services:
       - app-network
     restart: always
 
-  caddy:
-    image: caddy:latest
-    restart: always
-    ports:
-      - "80:80"    # HTTP (небезпечно, але потрібно для Let's Encrypt)
-      - "443:443"  # HTTPS (захищене з'єднання)
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-
 volumes:
-  caddy_data:
-  caddy_config:
   mongo-data:
     driver: local
 
