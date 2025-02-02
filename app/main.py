@@ -3,7 +3,7 @@ from app.endpoints import site, twaps, tokens
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
