@@ -1,10 +1,6 @@
 assistancefund.top {
-        tls hyperliquid.updates@gmail.com
-        reverse_proxy / http://fastapi:8000 {
-                transport http
-        }
-    handle_path /static/* {
-        root * app/static
-        file_server
+    tls hyperliquid.updates@gmail.com
+    reverse_proxy /api  http://fastapi:8000 {
+        transport http
     }
 }
