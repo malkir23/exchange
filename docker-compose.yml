@@ -27,6 +27,7 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro   # Файл конфігурації Caddy
       - caddy_data:/data
       - caddy_config:/config
+      - .:/project_exchange
     depends_on:
       - fastapi
     networks:

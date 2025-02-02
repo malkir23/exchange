@@ -6,6 +6,6 @@ assistancefund.top {
 
     handle_path /static/* {
         root * /project_exchange/app/static
-        file_server
+        file_server browse
     }
 }
