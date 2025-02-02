@@ -4,7 +4,7 @@ assistancefund.top {
                 transport http
         }
 				handle_path /static/* {
-					root * /project_exchange/app/static
+					root * /project_exchange/static
 					file_server
 			}
 }
