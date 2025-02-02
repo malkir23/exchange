@@ -49,7 +49,7 @@ console.log('🚀 ~ file: token.js ~ line 31 ~ buildChart ~ labels', labels);
     const amountValues = labels.map(
       (date) => tokenData[date][token]?.amount || 0
     );
-    const totalAmountValues = labels.map((date) => tokenData[date].totalAmount);
+    const totalAmountValues = labels.map((date) => parseFloat(tokenData[date].totalAmount));
 
     // const totalColor = generateColor(0.6);
     // const amountColor = generateColor(0.6);
@@ -94,7 +94,7 @@ console.log('🚀 ~ file: token.js ~ line 31 ~ buildChart ~ labels', labels);
 
   const ctx = document.getElementById('tokensChart').getContext('2d');
   new Chart(ctx, {
-    type: 'bar', // Base type
+    type: 'bar',
     data: {
       labels: labels,
       datasets: datasets,
