@@ -8,7 +8,7 @@ services:
     # expose:
     #   - "8000"
     ports:
-      -"80:8000"
+      - "80:8000"
     environment:
       - PYTHONUNBUFFERED=1
       - MONGO_URI=mongodb://mongo:27017
@@ -72,8 +72,8 @@ volumes:
     driver: local
   mongo-backup:
     driver: local
-  caddy_data:
-  caddy_config:
+  # caddy_data:
+  # caddy_config:
 
 networks:
   app-network:
