@@ -35,8 +35,25 @@ services:
       - app-network
     restart: always
 
+  mongo-backup:
+    image: mongo:6
+    container_name: mongo-backup
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+    volumes:
+      - mongo-backup:/backup
+      - .:/project_exchange  # Щоб доступний був файл backup.sh
+    depends_on:
+      - mongo
+    entrypoint: /project_exchange/backup.sh
+    networks:
+      - app-network
+    restart: always
+
 volumes:
   mongo-data:
+    driver: local
+  mongo-backup:
     driver: local
 
 networks:
