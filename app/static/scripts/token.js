@@ -2,20 +2,38 @@ let tokensChart = null;
 const TOKEN_URL = '/data';
 
 
-async function getLables(tokenData) {
-  const allLabels = Object.keys(tokenData).flatMap((date) => {
-    return Object.keys(tokenData[date]).filter(
+async function getTokens(tokenData) {
+  const allLabels = Object.keys(tokenData).flatMap((token) => {
+    return Object.keys(tokenData[token]).filter(
       (key) => key !== '_id' && key !== 'date' && key !== 'totalAmount'
     );
   });
-  const uniqueLabels = [...new Set(allLabels)]; // Remove duplicates
+  const uniqueLabels = [...new Set(allLabels)];
   return uniqueLabels;
 }
 
+async function getLables(tokenData){
+  let dates = Object.keys(tokenData);
+  return dates.sort((a, b) => {
+    const [dayA, monthA, yearA] = a.split('-').map(Number);
+    const [dayB, monthB, yearB] = b.split('-').map(Number);
+
+    if (yearA !== yearB) {
+      return yearA - yearB;
+    }
+
+    if (monthA !== monthB) {
+      return monthA - monthB;
+    }
+
+    return dayA - dayB;
+  });
+}
+
 async function buildChart(tokenData) {
-  const labels = Object.keys(tokenData);
-  const tokens = await getLables(tokenData);
-console.log('🚀 ~ file: token.js ~ line 31 ~ buildChart ~ labels', labels.reverse());
+  const labels = await getLables(tokenData) ;
+  const tokens = await getTokens(tokenData);
+console.log('🚀 ~ file: token.js ~ line 31 ~ buildChart ~ labels', labels);
 
   const generateColor = (opacity = 1) => {
     const r = Math.floor(Math.random() * 255);

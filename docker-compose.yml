@@ -3,7 +3,8 @@ version: '3.8'
 services:
   fastapi:
     build: .
-    container_name: fastapi
+    container_name: fastapi-app
+    restart: always
     ports:
       - "80:8000"
     environment:
