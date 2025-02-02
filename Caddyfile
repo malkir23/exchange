@@ -1,4 +1,4 @@
- :80 {
+assistancefund.top {
     tls hyperliquid.updates@gmail.com
     reverse_proxy / http://fastapi:8000 {
         transport http
