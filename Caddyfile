@@ -3,4 +3,6 @@ assistancefund.top {
         reverse_proxy / http://fastapi:8000 {
                 transport http
         }
+				root * /project_exchange/static
+				file_server
 }
