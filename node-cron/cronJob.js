@@ -66,8 +66,8 @@ function connectWebSocket() {
   ws.onclose = (event) => {
     setTimeout(() => {
       connectWebSocket();
-    }, 600000);
-    console.log('🔌 WebSocket закрито, перепідключення через 1 годину...');
+    }, 900000); // 15 minutes
+    console.log('🔌 WebSocket закрито, перепідключення через 15 хвилин...');
   };
 }
 

@@ -33,8 +33,8 @@ async def trigger_data_fetch(request: Request):
     for date, tokens in data_json.items():
         formatted_date = date_format()
 
-        # if date != str(formatted_date):
-        #     continue
+        if date != formatted_date:
+            continue
 
         existing_doc = await collection.find_one({"date": formatted_date})
         if existing_doc:
